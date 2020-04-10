@@ -49,4 +49,12 @@ public class Campus {
     public int hashCode() {
         return Objects.hash(id, location);
     }
+
+    @Override
+    public String toString() {
+        return "Campus{" +
+                "id=" + id +
+                ", location='" + location + '\'' +
+                '}';
+    }
 }
