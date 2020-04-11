@@ -11,7 +11,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.wcci.demo.model.Book;
 import org.wcci.demo.model.Campus;
+import org.wcci.demo.repositories.BookRepository;
 import org.wcci.demo.repositories.CampusRepository;
 
 import java.util.Collection;
@@ -31,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CampusControllerTest {
     @Mock
     private CampusRepository campusRepo;
+    @Mock
+    private BookRepository bookRepo;
     @InjectMocks
     private CampusController underTest;
     private Campus testCampus;
@@ -103,5 +107,14 @@ public class CampusControllerTest {
                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                .andExpect(jsonPath("$.location", is("Testerville")));
         verify(campusRepo).save(any(Campus.class));
+    }
+    @Test
+    public void campusPatchMethodToAddBookAddsBookToRepo(){
+        when(campusRepo.findById(1L)).thenReturn(Optional.of(testCampus));
+        Book testBook = new Book("Things to Test", null);
+        underTest.addBookToCampus(testBook, 1L);
+        verify(bookRepo).save(testBook);
+
+        verify(campusRepo).findById(1L);
     }
 }

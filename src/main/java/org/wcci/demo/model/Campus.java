@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -56,5 +58,12 @@ public class Campus {
                 "id=" + id +
                 ", location='" + location + '\'' +
                 '}';
+    }
+
+    public void addBook(Book book) {
+        if(books == null){
+            books = new HashSet<>();
+        }
+        books.add(book);
     }
 }

@@ -1,11 +1,10 @@
 package org.wcci.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.wcci.demo.model.Book;
 import org.wcci.demo.model.Campus;
+import org.wcci.demo.repositories.BookRepository;
 import org.wcci.demo.repositories.CampusRepository;
 
 import java.util.Collection;
@@ -14,7 +13,8 @@ import java.util.Collection;
 public class CampusController {
     @Autowired
     private CampusRepository campusRepo;
-
+    @Autowired
+    private BookRepository bookRepo;
     @GetMapping("/api/campuses/")
     public Collection<Campus> retrieveAll() {
         return (Collection<Campus>) campusRepo.findAll();
@@ -25,8 +25,17 @@ public class CampusController {
         return campusRepo.findById(id).get();
     }
 
-    @PostMapping("api/campuses/")
+    @PostMapping("/api/campuses/")
     public Campus add(Campus newCampus) {
         return campusRepo.save(newCampus);
+    }
+
+    @PatchMapping("/api/campuses/{campusId}/book/")
+    public Campus addBookToCampus(@RequestBody Book testBook, @PathVariable long campusId) {
+        Campus campus = campusRepo.findById(campusId).get();
+        bookRepo.save(testBook);
+        campus.addBook(testBook);
+        campusRepo.save(campus);
+        return campus;
     }
 }
